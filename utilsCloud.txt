@@ -1,0 +1,20 @@
+* Express API DOC :
+	http://expressjs.com/api.html
+
+* Mongoose API DOC : 
+	http://mongoosejs.com/docs/api.html
+
+* Tutorial RESTful API (1) :
+	http://adrianmejia.com/blog/2014/10/01/creating-a-restful-api-tutorial-with-nodejs-and-mongodb/
+
+* Tutorial RESTful API (2) :
+	http://pixelhandler.com/posts/develop-a-restful-api-using-nodejs-with-express-and-mongoose
+
+* Tutorial mongoose :
+	http://atinux.developpez.com/tutoriels/javascript/mongodb-nodejs-mongoose
+
+* Security authentication :
+	https://scotch.io/tutorials/authenticate-a-node-js-api-with-json-web-tokens
+
+* Authentication "jsonwebtoken" :
+	https://github.com/auth0/node-jsonwebtoken
