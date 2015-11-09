@@ -9,6 +9,7 @@ module.exports = mongoose.model('User', new Schema(
 	{ 
 	    guid: { type: String, unique: true, default: utils.guuid() }, 
 	    username: String, 
-	    password: String
+	    password: String,
+        level: int
 	}
 ));
