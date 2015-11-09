@@ -1,13 +1,19 @@
 {
-  "description": "Cloud web app.",
-  "version": "0.0.1",
-  "license": "MIT",
-  "private": false,
-  "dependencies": {
-    "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "jsonwebtoken": "^5.4.1",
-    "mongoose": "^4.2.4",
-    "morgan": "^1.6.1"
-  }
+    "name": "guid-me-hackaton",
+    "description": "Cloud web app.",
+    "version": "0.0.1",
+    "license": "MIT",
+    "private": false,
+    "author": "https://github.com/nFonsat/ESGI-GuidMe-Cloud/graphs/contributors",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/nFonsat/ESGI-GuidMe-Cloud.git"
+    },
+    "dependencies": {
+      "body-parser": "^1.14.1",
+      "express": "^4.13.3",
+      "jsonwebtoken": "^5.4.1",
+      "mongoose": "^4.2.5",
+      "morgan": "^1.6.1"
+    }
 }
