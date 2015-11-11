@@ -1,6 +1,7 @@
 "use strict";
 
 var config = require('./config/config.js');
+var utils = require('./utils/utils.js');
 
 var express     = require('express');
 var bodyParser  = require('body-parser');
@@ -11,17 +12,19 @@ var jwt         = require('jsonwebtoken');
 var app = express();
 
 //Config Mongoose DB
-var appConnection = mongoose.createConnection(config.database.uri);
-appConnection.on('error', console.error.bind(console, 'connection error:'));
-appConnection.once('open', function callback () {
-  console.log("Connection to database etablish");
+mongoose.connect(config.database.uri, function (err, res) {
+    if (err){
+        console.log('ERROR connecting to: ' + config.database.uri + '. ' + err);
+        throw err;
+    }
+
+    console.log("Connection to database : %s", config.database.uri);
 });
 
 app.set('superSecret', config.database.secret);
 
-//Config Body Parser
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+// parse various different custom JSON types as JSON
+app.use(bodyParser.json({ type: 'application/json' }));
 
 //Config Morgan
 app.use(morgan('dev'));
@@ -31,10 +34,9 @@ app.get('/', function(req, res) {
     res.send('Hello!');
 });
 
-var apiRoutes = express.Router();
-
-app.use(config.api.base_url, apiRoutes);
+require('./controllers/userController') (app);
 
 app.listen(config.port, function () {
 	console.log("Cloud Guid Me is running on port %s", config.port);
+    utils.listRoutes(app._router);
 });
