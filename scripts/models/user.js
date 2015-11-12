@@ -1,12 +1,24 @@
 "use strict";
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
-module.exports = mongoose.model('User', new Schema(
-    { 
-        email: { type: String, unique: true}, 
-        password: String,
-        level: { type: String, default: 0 }
+var UserSchema = new Schema({
+    username: { 
+        type: String 
+    },
+    password: {
+        type: String
+    },
+    level: {
+        type: String,
+        default: 0
+    },
+    email: {
+        type: String,
+        unique: true,
+        default: ''
     }
-));
+});
+
+module.exports = mongoose.model('User', UserSchema);
