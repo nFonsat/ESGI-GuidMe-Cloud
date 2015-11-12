@@ -21,13 +21,18 @@ mongoose.connect(config.database.uri, function (err, res) {
     console.log("Connection to database : %s", config.database.uri);
 });
 
-app.set('superSecret', config.database.secret);
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// parse various different custom JSON types as JSON
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(bodyParser.json());
 
 //Config Morgan
 app.use(morgan('dev'));
+
+app.oauth = oauthserver({
+    model: require('./models/oauthModel'),
+    grants: ['password', 'refresh_token'],
+    debug: true
+});
 
 //Router
 app.get('/', function(req, res) {
@@ -35,6 +40,9 @@ app.get('/', function(req, res) {
 });
 
 require('./controllers/userController') (app);
+require('./controllers/oauthController') (app);
+
+app.use(app.oauth.errorHandler());
 
 app.listen(config.port, function () {
 	console.log("Cloud Guid Me is running on port %s", config.port);
