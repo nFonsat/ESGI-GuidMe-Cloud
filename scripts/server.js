@@ -3,10 +3,11 @@
 var config = require('./config/config.js');
 var utils = require('./utils/utils.js');
 
-var express     = require('express');
-var bodyParser  = require('body-parser');
-var morgan      = require('morgan');
-var mongoose    = require('mongoose');
+var express     = require('express'),
+    bodyParser  = require('body-parser'),
+    morgan      = require('morgan'),
+    oauthserver = require('oauth2-server'),
+    mongoose    = require('mongoose');
 
 var app = express();
 
@@ -37,5 +38,5 @@ require('./controllers/userController') (app);
 
 app.listen(config.port, function () {
 	console.log("Cloud Guid Me is running on port %s", config.port);
-    utils.listRoutes(app._router);
+    //utils.listRoutes(app._router);
 });
