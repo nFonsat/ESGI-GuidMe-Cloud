@@ -13,4 +13,4 @@ var OAuthClientSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('OAuthRefreshToken', OAuthRefreshTokensSchema);
+module.exports = mongoose.model('OAuthClient', OAuthClientSchema);
