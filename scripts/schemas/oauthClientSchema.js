@@ -5,12 +5,10 @@ var mongoose = require('mongoose'),
 
 var OAuthClientSchema = new Schema({
     clientId: { 
-        type: String
+        type: String,
+        unique: true
     },
     clientSecret: {
-        type: String
-    },
-    redirectUri: { 
         type: String
     }
 });
