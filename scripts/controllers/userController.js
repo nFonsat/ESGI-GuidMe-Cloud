@@ -3,7 +3,7 @@
 module.exports = function (app) {
     var SHA512 = require("crypto-js/sha512");
     var bodyParser  = require('body-parser');
-    var User = require('../models/user');
+    var User = require('../schemas/userSchema');
 
     var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
