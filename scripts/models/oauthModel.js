@@ -1,6 +1,6 @@
 "use strict";
 
-var OAuthOAuthModel = module.exports,
+var OAuthModel = module.exports,
     OAuthAccessTokenOAuthModel  = require('../schemas/oauthAccessTokenSchema'),
     OAuthRefreshTokenOAuthModel = require('../schemas/oauthRefreshTokenSchema'),
     OAuthClientOAuthModel       = require('../schemas/oauthClientSchema'),
