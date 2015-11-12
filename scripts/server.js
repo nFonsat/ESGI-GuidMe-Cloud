@@ -1,7 +1,8 @@
 "use strict";
 
-var config = require('./config/config.js');
-var utils = require('./utils/utils.js');
+var config  = require('./config/config.js'),
+    fixture = require('./utils/fixture_database.js'),
+    utils   = require('./utils/utils.js');
 
 var express     = require('express'),
     bodyParser  = require('body-parser'),
