@@ -5,8 +5,7 @@ var mongoose = require('mongoose'),
 
 var OAuthClientSchema = new Schema({
     clientId: { 
-        type: String,
-        unique: true
+        type: String
     },
     clientSecret: {
         type: String
