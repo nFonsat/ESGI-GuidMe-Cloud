@@ -1,26 +1,22 @@
 "use strict";
 
 module.exports = function (app) {
-    var SHA512 = require("crypto-js/sha512");
     var bodyParser  = require('body-parser');
     var User = require('../schemas/userSchema');
 
-    var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-    app.post('/api/v1/user', urlencodedParser, function(req, res) {
+    app.post('/api/v1/user', function(req, res) {
         if (!req.body) return res.sendStatus(400);
 
         var email = req.body.email;
+        var username = req.body.username;
         var password = req.body.password;
 
-        console.log('Email : %s \nPassword : %s', email, password);
-        if (email && password) {
-            var person = new User({ 
-                email: email, 
-                password: SHA512(password)
+        if (email && password && username) {
+            var person = new User({
+                username: username,  
+                email: email,
+                password: password
             });
-
-            console.log("User => %s", person);
 
             person.save(function(err) {
                 if (err){
@@ -29,7 +25,7 @@ module.exports = function (app) {
                 }
 
                 console.log('User saved successfully');
-                res.json({ success: true });
+                res.json({ success: true, user: person });
             });
         }
         else {
