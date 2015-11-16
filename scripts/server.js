@@ -1,8 +1,8 @@
 "use strict";
 
-var config  = require('./config/config.js'),
-    fixture = require('./utils/fixture_database.js'),
-    utils   = require('./utils/utils.js');
+var config  = require('./config/config'),
+    fixture = require('./utils/fixture_database'),
+    utils   = require('./utils/utils');
 
 var express     = require('express'),
     bodyParser  = require('body-parser'),
@@ -29,23 +29,18 @@ app.use(bodyParser.json());
 //Config Morgan
 app.use(morgan('dev'));
 
+//Config OAuthServer
 app.oauth = oauthserver({
     model: require('./models/oauthModel'),
     grants: ['password', 'refresh_token'],
     debug: true
 });
 
-//Router
-app.get('/', function(req, res) {
-    res.send('Hello!');
-});
-
-require('./controllers/userController') (app);
-require('./controllers/oauthController') (app);
-
 app.use(app.oauth.errorHandler());
+
+//Router
+require('./config/routing') (app);
 
 app.listen(config.port, function () {
 	console.log("Cloud Guid Me is running on port %s", config.port);
-    //utils.listRoutes(app._router);
 });
