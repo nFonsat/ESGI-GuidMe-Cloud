@@ -1,22 +1,22 @@
 "use strict";
 
-var OAuthModel = module.exports,
-    OAuthAccessTokenOAuthModel  = require('../schemas/oauthAccessTokenSchema'),
-    OAuthRefreshTokenOAuthModel = require('../schemas/oauthRefreshTokenSchema'),
-    OAuthClientOAuthModel       = require('../schemas/oauthClientSchema'),
-    UserOAuthModel              = require('../schemas/userSchema');
+var OAuthModel              = module.exports,
+    OAuthAccessTokenSchema  = require('../schemas/oauthAccessTokenSchema'),
+    OAuthRefreshTokenSchema = require('../schemas/oauthRefreshTokenSchema'),
+    OAuthClientSchema       = require('../schemas/oauthClientSchema'),
+    UserSchema              = require('../schemas/userSchema');
 
 
 OAuthModel.getAccessToken = function (bearerToken, callback) {
   console.log('in getAccessToken (bearerToken: ' + bearerToken + ')');
 
-  OAuthAccessTokenOAuthModel.findOne({ accessToken: bearerToken }, callback);
+  OAuthAccessTokenSchema.findOne({ accessToken: bearerToken }, callback);
 };
 
 OAuthModel.getClient = function (clientId, clientSecret, callback) {
   console.log('in getClient (clientId: ' + clientId + ', clientSecret: ' + clientSecret + ')');
 
-  OAuthClientOAuthModel.findOne({ clientId: clientId, clientSecret: clientSecret }, callback);
+  OAuthClientSchema.findOne({ clientId: clientId, clientSecret: clientSecret }, callback);
 };
 
 OAuthModel.grantTypeAllowed = function (clientId, grantType, callback) {
@@ -27,7 +27,7 @@ OAuthModel.grantTypeAllowed = function (clientId, grantType, callback) {
 OAuthModel.saveAccessToken = function (token, clientId, expires, userId, callback) {
   console.log('in saveAccessToken (token: ' + token + ', clientId: ' + clientId + ', userId: ' + userId + ', expires: ' + expires + ')');
 
-  var accessToken = new OAuthAccessTokenOAuthModel({
+  var accessToken = new OAuthAccessTokenSchema({
     accessToken: token,
     clientId: clientId,
     userId: userId,
@@ -43,7 +43,7 @@ OAuthModel.saveAccessToken = function (token, clientId, expires, userId, callbac
 OAuthModel.getUser = function (username, password, callback) {
   console.log('in getUser (username: ' + username + ', password: ' + password + ')');
 
-  UserOAuthModel.findOne({ username: username, password: password }, function(err, user) {
+  UserSchema.findOne({ username: username, password: password }, function(err, user) {
     if(err) return callback(err);
     callback(null, user._id);
   });
@@ -55,7 +55,7 @@ OAuthModel.getUser = function (username, password, callback) {
 OAuthModel.saveRefreshToken = function (token, clientId, expires, userId, callback) {
   console.log('in saveRefreshToken (token: ' + token + ', clientId: ' + clientId +', userId: ' + userId + ', expires: ' + expires + ')');
 
-  var refreshToken = new OAuthRefreshTokenOAuthModel({
+  var refreshToken = new OAuthRefreshTokenSchema({
     refreshToken: token,
     clientId: clientId,
     userId: userId,
@@ -68,5 +68,5 @@ OAuthModel.saveRefreshToken = function (token, clientId, expires, userId, callba
 OAuthModel.getRefreshToken = function (refreshToken, callback) {
   console.log('in getRefreshToken (refreshToken: ' + refreshToken + ')');
 
-  OAuthRefreshTokenOAuthModel.findOne({ refreshToken: refreshToken }, callback);
+  OAuthRefreshTokenSchema.findOne({ refreshToken: refreshToken }, callback);
 };
