@@ -36,10 +36,10 @@ app.oauth = oauthserver({
     debug: true
 });
 
-app.use(app.oauth.errorHandler());
-
 //Router
 require('./config/routing') (app);
+
+app.use(app.oauth.errorHandler());
 
 app.listen(config.port, function () {
 	console.log("Cloud Guid Me is running on port %s", config.port);
