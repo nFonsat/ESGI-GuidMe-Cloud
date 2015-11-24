@@ -13,14 +13,12 @@ UserController.createUser = function(req, res) {
     var password = req.body.password;
 
     if (username && email && password) {
-        UserModel.saveUser(username, email, password, function(err) {
+        UserModel.saveUser(username, email, password, function(err, user) {
             if (err){
-                console.log(err);
-                throw err;
+                return res.status(500).send(err);
             }
 
-            console.log('User saved successfully');
-            res.json({ success: true, user: person });
+            res.json({ success: true, user: user });
         });
     }
     else {

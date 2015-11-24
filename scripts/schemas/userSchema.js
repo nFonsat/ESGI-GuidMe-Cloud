@@ -6,10 +6,13 @@ var mongoose = require('mongoose'),
 var UserSchema = new Schema({
     username: { 
         type: String,
+        require: true,
         unique: true
     },
     password: {
-        type: String
+        type: String,
+        require: true,
+        select: false
     },
     level: {
         type: Number,
@@ -17,6 +20,7 @@ var UserSchema = new Schema({
     },
     email: {
         type: String,
+        require: true,
         unique: true,
         default: ''
     }
