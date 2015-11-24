@@ -11,6 +11,6 @@ module.exports = function (app) {
 
     var apiUser = apiBaseUrl + '/user';
     app.post(apiUser, UserController.createUser);
-    app.get(apiUser, UserController.getUser);
+    app.get(apiUser, app.oauth.authorise(), UserController.getUser);
     app.get(apiUser + '/all', UserController.userList);
 }

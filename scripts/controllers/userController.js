@@ -1,8 +1,7 @@
 "use strict";
 
-var UserController = module.exports;
-
-var User = require('../schemas/userSchema');
+var UserController  = module.exports,
+    UserModel       = require('../models/userModel');
 
 UserController.createUser = function(req, res) {
     if (!req.body) return res.sendStatus(400);
@@ -11,14 +10,8 @@ UserController.createUser = function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
 
-    if (email && password && username) {
-        var person = new User({
-            username: username,  
-            email: email,
-            password: password
-        });
-
-        person.save(function(err) {
+    if (username && email && password) {
+        UserModel.saveUser(username, email, password, function(err) {
             if (err){
                 console.log(err);
                 throw err;
@@ -34,7 +27,7 @@ UserController.createUser = function(req, res) {
 };
 
 UserController.userList = function (req, res, next) {
-    User.find({}, function(err, users) {
+    UserModel.findUsers(function(err, users) {
         if (err){
             console.log(err);
             throw err;
@@ -47,5 +40,6 @@ UserController.userList = function (req, res, next) {
 
 
 UserController.getUser = function (req, res, next) {
+    console.log(req);
     res.json({});
 };
