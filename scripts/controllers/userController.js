@@ -5,7 +5,7 @@ var UserController  = module.exports,
 
 UserController.createUser = function(req, res) {
     if (!req.body){
-        return res.sendStatus(500);
+        res.status(500).json({ error: 'Check body parameter' });
     }
 
     var email = req.body.email;
@@ -22,7 +22,7 @@ UserController.createUser = function(req, res) {
         });
     }
     else {
-        res.status(400).json({ error: 'Check body parameter' });
+        res.status(500).json({ error: 'Check body parameter' });
     }
 };
 
