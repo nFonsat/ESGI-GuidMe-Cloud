@@ -4,7 +4,9 @@ var UserController  = module.exports,
     UserModel       = require('../models/userModel');
 
 UserController.createUser = function(req, res) {
-    if (!req.body) return res.sendStatus(400);
+    if (!req.body){
+        return res.sendStatus(500);
+    }
 
     var email = req.body.email;
     var username = req.body.username;
@@ -29,17 +31,19 @@ UserController.createUser = function(req, res) {
 UserController.userList = function (req, res, next) {
     UserModel.findUsers(function(err, users) {
         if (err){
-            console.log(err);
-            throw err;
+            return res.status(500).send(err);
         }
             
         res.json(users);
     });
 };
 
-
-
 UserController.getUser = function (req, res, next) {
-    console.log(req);
-    res.json({});
+    UserModel.findUserById(req.user.id, function(err, user) {
+        if (err) {
+            return res.status(500).send(err);
+        };
+
+        res.json(user);
+    });
 };
