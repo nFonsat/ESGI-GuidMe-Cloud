@@ -12,7 +12,7 @@ var UserSchema = new Schema({
         type: String
     },
     level: {
-        type: String,
+        type: Number,
         default: 0
     },
     email: {
