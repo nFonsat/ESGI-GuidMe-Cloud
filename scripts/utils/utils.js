@@ -11,13 +11,13 @@ exports.guuid = function () {
 };
 
 exports.listRoutes = function () {
-	function space(x) {
-	    var res = '';
-	    while(x--) res += ' ';
-	    return res;
-	}
+    function space(x) {
+        var res = '';
+        while(x--) res += ' ';
+        return res;
+    }
 
-	for (var i = 0; i < arguments.length;  i++) {
+    for (var i = 0; i < arguments.length;  i++) {
         if(arguments[i].stack instanceof Array){
             console.log('');
             arguments[i].stack.forEach(function(a){
@@ -32,4 +32,23 @@ exports.listRoutes = function () {
             console.log('');
         }
     }
+};
+
+exports.wsdl = function (router) {
+    function space(x) {
+        var res = '';
+        while(x--) res += ' ';
+        return res;
+    }
+
+    router.stack.forEach(function(value){
+        var route = value.route;
+        if (route) {
+            var methodes = [];
+            route.stack.forEach(function(subRoute) {
+                methodes.push(subRoute.method.toUpperCase());
+            });
+            console.log(route.path, methodes);
+        };
+    });
 };
