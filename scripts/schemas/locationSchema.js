@@ -1,19 +1,22 @@
 "use strict";
 
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+var mongoose    = require('mongoose'),
+    Schema      = mongoose.Schema,
+    ObjectId    = Schema.ObjectId;
 
 var LocationSchema = new Schema({
     name: { 
         type: String,
         require: true
     },
-    userId: {
-        type: String,
+    user: { 
+        type : ObjectId, 
+        ref : 'User',
         require: true
     },
-    coordonateId: {
-        type: String,
+    coordonate: { 
+        type : ObjectId, 
+        ref : 'Coordonate',
         require: true
     }
 });
