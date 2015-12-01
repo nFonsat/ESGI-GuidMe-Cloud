@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "start": "scripts/server.js"
+  },
   "author": "https://github.com/nFonsat/ESGI-GuidMe-Cloud/graphs/contributors",
   "repository": {
     "type": "git",
