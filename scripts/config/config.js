@@ -1,6 +1,6 @@
 module.exports = {
 	adress: "127.0.0.1",
-	port: "8080",
+	port: "3000",
 	api: {
 		base_url: "/api/v1"
 	},
