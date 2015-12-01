@@ -1,7 +1,8 @@
 "use strict";
 
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+var mongoose    = require('mongoose'),
+    SHA512      = require("crypto-js/sha512"),
+    Schema      = mongoose.Schema;
 
 var UserSchema = new Schema({
     username: { 
@@ -25,5 +26,11 @@ var UserSchema = new Schema({
         default: ''
     }
 });
+
+UserSchema.pre('save', function (next) {
+    var plainPassword = this.password;
+    this.password = SHA512(plainPassword);
+    next();
+})
 
 module.exports = mongoose.model('User', UserSchema);

@@ -4,7 +4,8 @@ var OAuthModel              = module.exports,
     OAuthAccessTokenSchema  = require('../schemas/oauthAccessTokenSchema'),
     OAuthRefreshTokenSchema = require('../schemas/oauthRefreshTokenSchema'),
     OAuthClientSchema       = require('../schemas/oauthClientSchema'),
-    UserSchema              = require('../schemas/userSchema');
+    UserSchema              = require('../schemas/userSchema'),
+    SHA512                  = require("crypto-js/sha512");
 
 
 OAuthModel.getAccessToken = function (bearerToken, callback) {
@@ -44,9 +45,14 @@ OAuthModel.saveAccessToken = function (token, clientId, expires, userId, callbac
 OAuthModel.getUser = function (username, password, callback) {
   console.log('in getUser (username: ' + username + ', password: ' + password + ')');
 
-  UserSchema.findOne({ username: username, password: password }, function(err, user) {
-    if(err) return callback(err);
-    callback(null, user._id);
+  var hashPassword = SHA512(password);
+  UserSchema.findOne({ username: username, password: hashPassword.toString() }, function(err, user) {
+    if(err) {
+        console.log("Error getUser : %s", err);
+        return callback(err);
+    } 
+    console.log(user);
+    callback(null, user.id);
   });
 };
 
