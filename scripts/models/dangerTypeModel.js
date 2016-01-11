@@ -3,19 +3,42 @@
 var DangerTypeModel   = module.exports,
     DangerTypeSchema  = require('../schemas/dangerTypeSchema');
 
-DangerTypeModel.saveDangerType = function(callback){
-    
+DangerTypeModel.save = function(name, iconUrl, callback){
+    var dangerType = new DangerTypeSchema({
+        name: name,
+        icon: iconUrl
+    });
+
+    DangerTypeModel.findOneByName(name, function(err, type){
+        if (err) {
+            callback(err);
+        }
+        else {
+            dangerType.save(callback);
+        }
+    });
 }
 
-DangerTypeModel.deleteDangerType = function(callback){
-    
+DangerTypeModel.delete = function(dangerTypeId, callback){
+    DangerTypeSchema.findByIdAndRemove(dangerTypeId, callback);
 }
 
-DangerTypeModel.findAllDangerType = function(callback){
-    
+DangerTypeModel.findOneByName = function(name, callback){
+    DangerTypeSchema.findOne({ name: name }, function (err, dangerType){
+        if (err) {
+            callback(err);
+        }
+        else {
+            callback(null, dangerType);
+        }
+    });
 }
 
-DangerTypeModel.findDangerTypeById = function (callback) {
-    
+DangerTypeModel.findAll = function(callback){
+    DangerTypeSchema.find({}, callback);
+}
+
+DangerTypeModel.findById = function (dangerTypeId, callback){
+    DangerTypeSchema.findById(dangerTypeId, callback);
 }
 
