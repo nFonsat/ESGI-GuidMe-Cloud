@@ -9,6 +9,11 @@ var DangerSchema = new Schema({
         type: String,
         require: true
     },
+    type: { 
+        type : ObjectId, 
+        ref : 'DangerType',
+        require: true
+    },
     user: { 
         type : ObjectId, 
         ref : 'User',
