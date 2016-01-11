@@ -14,9 +14,9 @@ var LocationSchema = new Schema({
         ref : 'User',
         require: true
     },
-    coordonate: { 
+    coordinate: { 
         type : ObjectId, 
-        ref : 'Coordonate',
+        ref : 'Coordinate',
         require: true
     }
 });

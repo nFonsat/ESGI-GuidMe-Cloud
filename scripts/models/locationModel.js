@@ -1,19 +1,19 @@
 "use strict";
 
 var LocationModel   = module.exports,
-    CoordonateModel = require('../models/coordonateModel'),
+    CoordinateModel = require('../models/coordinateModel'),
     LocationSchema  = require('../schemas/locationSchema');
 
 LocationModel.saveWithLatLng = function(name, userId, latitude, longitude, callback) {
     console.log("Saving location %s with lat : %s and lnt : %s for userID : %s", name, latitude, longitude, userId);
-    CoordonateModel.saveCoordonate(latitude, longitude, function (err, coordonate) {
+    CoordinateModel.saveCoordinate(latitude, longitude, function (err, coordinate) {
         if (err) {
-            console.log("CoordonateModel Error save : %s", err);
+            console.log("CoordinateModel Error save : %s", err);
             callback(err);
         }
         else {
             var location = new LocationSchema({
-                name: name, user: userId, coordonate: coordonate.id
+                name: name, user: userId, coordinate: coordinate.id
             });
 
             location.save(callback);
@@ -21,23 +21,23 @@ LocationModel.saveWithLatLng = function(name, userId, latitude, longitude, callb
     })
 };
 
-LocationModel.getAddressFromCoordonate = function(userId, latitude, longitude, callback) {
+LocationModel.getAddressFromCoordinate = function(userId, latitude, longitude, callback) {
 
 };
 
-LocationModel.getAddressByCoordonateId = function(userId, coordonateId, callback) {
+LocationModel.getAddressByCoordinateId = function(userId, coordinateId, callback) {
 
 };
 
 LocationModel.getAddressesByUserId = function(userId, callback) {
     LocationSchema.find({user:userId})
-                  .populate('coordonate')
+                  .populate('coordinate')
                   .exec(callback);
 };
 
 LocationModel.getAddressesById = function(addressId, callback) {
     LocationSchema.findById(addressId)
-                  .populate('coordonate')
+                  .populate('coordinate')
                   .exec(callback);
 };
 

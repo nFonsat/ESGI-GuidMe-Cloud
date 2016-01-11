@@ -1,9 +1,9 @@
 "use strict";
 
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+      Schema = mongoose.Schema;
 
-var CoordonateSchema = new Schema({
+var CoordinateSchema = new Schema({
     geometry: {
         type: [Number],
         require: true,
@@ -11,4 +11,4 @@ var CoordonateSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Coordonate', CoordonateSchema);
+module.exports = mongoose.model('Coordinate', CoordinateSchema);
