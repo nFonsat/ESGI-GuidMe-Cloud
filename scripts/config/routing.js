@@ -4,7 +4,8 @@ module.exports = function (app) {
     var apiBaseUrl              = require('../config/config').api.base_url,
         CloudController         = require('../controllers/cloudController'),
         UserController          = require('../controllers/userController'),
-        LocationController      = require('../controllers/locationController');
+        LocationController      = require('../controllers/locationController'),
+        DangerController        = require('../controllers/dangerController');
 
     app.all('/oauth/token', app.oauth.grant());
 
@@ -21,4 +22,11 @@ module.exports = function (app) {
     app.get(apiLocation + '/:locationId', app.oauth.authorise(), LocationController.getLocation);
     app.put(apiLocation + '/:locationId', app.oauth.authorise(), LocationController.updateLocation);
     app.delete(apiLocation + '/:locationId', app.oauth.authorise(), LocationController.deleteLocation);
+
+    var apiDanger = apiBaseUrl + '/danger';
+    app.get(apiDanger + '/all', DangerController.getDangers);
+    app.post(apiDanger, app.oauth.authorise(), DangerController.postDanger);
+    app.get(apiDanger + '/:dangerId', DangerController.getDanger);
+    app.put(apiDanger + '/:dangerId', app.oauth.authorise(), DangerController.updateDanger);
+    app.delete(apiDanger + '/:dangerId', app.oauth.authorise(), DangerController.deleteDanger);
 }
