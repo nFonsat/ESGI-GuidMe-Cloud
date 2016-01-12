@@ -24,7 +24,7 @@ DangerModel.save = function(name, typeId, userId, latitude, longitude, callback)
 };
 
 DangerModel.findByDistanceToPoint = function(latitude, longitude, distance, limitData, callback){
-    var limit = limitData || 10;
+    var limit = limitData || 100;
 
     var maxDistance = distance || 5;
     maxDistance /= 6371;
@@ -35,13 +35,13 @@ DangerModel.findByDistanceToPoint = function(latitude, longitude, distance, limi
 
     // find a location
     DangerSchema.find({
-        coordinate : {
-            geometry: {
-                $near: coords,
-                $maxDistance: maxDistance
-            }
+        'coordinate': {
+            $near: coords,
+            $maxDistance: maxDistance
         }
-    }).limit(limit).exec(function(err, data) {
+    })
+    .limit(limit)
+    .exec(function(err, data) {
         if (err) {
             callback(err);
         }
@@ -49,6 +49,13 @@ DangerModel.findByDistanceToPoint = function(latitude, longitude, distance, limi
             callback(null, data);
         }
     });
+}
+
+DangerModel.findById = function(dangerId, callback){
+    DangerSchema.findById(dangerId)
+                .populate('type')
+                .populate('coordinate')
+                .exec(callback);
 }
 
 DangerModel.findByUserId = function(userId, callback){
@@ -66,11 +73,15 @@ DangerModel.findAll = function(callback){
 };
 
 DangerModel.update = function(dangerId, userId, newName, newType, callback){
-    DangerSchema.findById(addressId, function (err, danger) {
+    DangerSchema.findById(dangerId, function (err, danger) {
         if (err){
             callback(err);
         }
-        else if (danger.id == userId) {
+        else if ( !danger ){
+            var error = "Data not found";
+            callback(error);
+        }
+        else if (danger.user == userId) {
             danger.name = newName;
             danger.type = newType;
             danger.save(callback);
@@ -81,11 +92,15 @@ DangerModel.update = function(dangerId, userId, newName, newType, callback){
 };
 
 DangerModel.delete = function(dangerId, userId, callback){
-    DangerSchema.findById(addressId, function (err, danger) {
+    DangerSchema.findById(dangerId, function (err, danger) {
         if (err){
             callback(err);
         }
-        else if (danger.id == userId){
+        else if ( !danger ){
+            var error = "Data not found";
+            callback(error);
+        }
+        else if (danger && danger.user == userId){
             danger.remove(callback);
         } else {
             callback("User not owner");

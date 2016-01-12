@@ -8,7 +8,7 @@ DangerController.postDanger = function (req, res, next) {
 
     var name        = req.body.name,
         typeId      = req.body.typeId,
-        latitude    = req.body.latitude
+        latitude    = req.body.latitude,
         longitude   = req.body.longitude,
         userId      = req.user.id;
 
@@ -75,11 +75,10 @@ DangerController.updateDanger = function (req, res, next) {
         DangerModel.update(dangerId, userId, newName, newType, 
             function(err, dataUpdated) {
                 if (err) {
-                    console.log("updateDanger Error : %s", err)
-                    res.status(500).send({error: "Bad mongoose query"});
+                    res.status(500).send(err);
                 }
                 else {
-                    DangerModel.findById(dataSaving.id, function(err, data) {
+                    DangerModel.findById(dataUpdated.id, function(err, data) {
                         if (err) {
                             res.status(500).send(err);
                         }
@@ -117,12 +116,12 @@ DangerController.deleteDanger = function (req, res, next) {
 };
 
 DangerController.getDangers = function (req, res, next) {
-    console.log("--DangerController deleteDanger");
+    console.log("--DangerController getDangers");
 
     var latitude    = req.query.latitude,
         longitude   = req.query.longitude,
-        distance    = req.query.distance,
-        limitData   = req.query.limit;
+        distance    = req.query.distance || 250,
+        limitData   = req.query.limit || 100;
 
     if ( !latitude || !longitude ){
         DangerModel.findAll(function(err, results) {
