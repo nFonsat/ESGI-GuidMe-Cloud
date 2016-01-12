@@ -20,7 +20,7 @@ CoordinateModel.deleteCoordinate = function(latitude, longitude, callback){
 }
 
 CoordinateModel.findAllCoordinate = function(latitude, longitude, distance, limitData, callback){
-    var limit = limitData || 10;
+    var limit = limitData || 100;
 
     var maxDistance = distance || 5;
     maxDistance /= 6371;
@@ -35,13 +35,9 @@ CoordinateModel.findAllCoordinate = function(latitude, longitude, distance, limi
         $near: coords,
         $maxDistance: maxDistance
       }
-    }).limit(limit).exec(function(err, locations) {
-      if (err) {
-        return callback(null);
-      }
-
-      callback(locations);
-    });
+    })
+    .limit(limit)
+    .exec(callback);
 }
 
 CoordinateModel.findCoordinateById = function (coordinateId, callback) {

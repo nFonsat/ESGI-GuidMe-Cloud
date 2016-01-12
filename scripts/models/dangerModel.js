@@ -24,31 +24,32 @@ DangerModel.save = function(name, typeId, userId, latitude, longitude, callback)
 };
 
 DangerModel.findByDistanceToPoint = function(latitude, longitude, distance, limitData, callback){
-    var limit = limitData || 100;
+    CoordinateModel.findAllCoordinate(latitude, longitude, distance, limitData, 
+        function(err, data) {
+            if (err) {
+                callback(err);
+            }
+            else {
+                var dataTofind = [];
+                data.forEach(function (coordinate) {
+                    dataTofind.push({coordinate: coordinate.id});
+                });
 
-    var maxDistance = distance || 5;
-    maxDistance /= 6371;
-
-    var coords = [];
-    coords[0] = latitude;
-    coords[1] = longitude;
-
-    // find a location
-    DangerSchema.find({
-        'coordinate': {
-            $near: coords,
-            $maxDistance: maxDistance
+                DangerSchema.find({ $or: dataTofind })
+                    .populate('type')
+                    .populate('coordinate')
+                    .exec(function(err, results) {
+                        if (err){
+                            callback(err);
+                        }
+                        else {
+                            callback(null, results);
+                        }
+                    }
+                );
+            }
         }
-    })
-    .limit(limit)
-    .exec(function(err, data) {
-        if (err) {
-            callback(err);
-        }
-        else {
-            callback(null, data);
-        }
-    });
+    );
 }
 
 DangerModel.findById = function(dangerId, callback){
