@@ -4,7 +4,7 @@ var DangerController  = module.exports,
     DangerModel       = require('../models/dangerModel');
 
 DangerController.postDanger = function (req, res, next) {
-    console.log("--DangerController postDanger %s", req);
+    console.log("--DangerController postDanger");
 
     var name        = req.body.name,
         typeId      = req.body.typeId,
@@ -38,7 +38,7 @@ DangerController.postDanger = function (req, res, next) {
 };
 
 DangerController.getDanger = function (req, res, next) {
-    console.log("--DangerController getDanger %s", req);
+    console.log("--DangerController getDanger");
 
     var dangerId = req.params.dangerId;
 
@@ -58,7 +58,7 @@ DangerController.getDanger = function (req, res, next) {
 };
 
 DangerController.updateDanger = function (req, res, next) {
-    console.log("--DangerController updateDanger %s", req);
+    console.log("--DangerController updateDanger");
 
     var newName     = req.body.name,
         newType     = req.body.typeId,
@@ -94,7 +94,7 @@ DangerController.updateDanger = function (req, res, next) {
 };
 
 DangerController.deleteDanger = function (req, res, next) {
-    console.log("--DangerController deleteDanger %s", req);
+    console.log("--DangerController deleteDanger");
 
     var dangerId    = req.params.dangerId,
         userId      = req.user.id;
@@ -117,7 +117,7 @@ DangerController.deleteDanger = function (req, res, next) {
 };
 
 DangerController.getDangers = function (req, res, next) {
-    console.log("--DangerController deleteDanger", req.query );
+    console.log("--DangerController deleteDanger");
 
     var latitude    = req.query.latitude,
         longitude   = req.query.longitude,
