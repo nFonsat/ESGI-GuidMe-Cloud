@@ -1,38 +1,52 @@
 "use strict";
-var clients                 = require('../config/config.js').clients,
-    OAuthClientOAuthModel   = require('../schemas/oauthClientSchema'),
-    User                    = require('../schemas/userSchema'),
-    mongoose                = require('mongoose');
+
+var clients             = require('../config/config.js').clients,
+    dangerTypes         = require('../config/config.js').danger_types,
+    OAuthClientModel    = require('../models/oauthModel'),
+    DangerTypeModel     = require('../models/dangerTypeModel'),
+    UserModel           = require('../models/userModel'),
+    mongoose            = require('mongoose');
 
 exports.loadOAuthClientFixture = function () {
     clients.forEach(function (client) {
-        var clientDB = new OAuthClientOAuthModel({
-            clientId: client.clientId,
-            clientSecret: client.clientSecret
-        });
-
-        clientDB.save(function (err) {
-            if (err) {
-                throw err;
+        OAuthClientModel.saveClient(client.clientId, client.clientSecret, 
+            function(err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Client %s added to database", client.clientName);
+                }
             }
+        );
+    });
+};
 
-            console.log("Client %s added to database", client.clientName);
-        });
+exports.loadDangerTypeFixture = function () {
+    dangerTypes.forEach(function (type) {
+
+        DangerTypeModel.save(type.name, type.icon, 
+            function(err, type) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("Danger Type %s added to database", type.name);
+                }
+            }
+        );
     });
 };
 
 exports.loadUserFixture = function() {
-    var testUser = new User({
-        username: 'test',
-        password: 'password',
-        email: 'test@test.com'
-    });
-
-    testUser.save(function (err) {
-        if (err) {
-            throw err;
+    UserModel.save('test', 'password', 'test@test.com', 
+        function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log("User %s added to database", result.username);
+            }
         }
-
-        console.log("User test added to database");
-    });
+    );
 };
