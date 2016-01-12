@@ -13,6 +13,10 @@ DangerTypeModel.save = function(name, iconUrl, callback){
         if (err) {
             callback(err);
         }
+        else if (type) {
+            var error = "Danger Type " + type.name + " already exists";
+            callback(error);
+        }
         else {
             dangerType.save(callback);
         }

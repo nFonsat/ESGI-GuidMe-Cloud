@@ -24,5 +24,19 @@ module.exports = {
             clientId: 'guid_me_test',
             clientSecret: '&&enaDecu266ruw@'
         }
+    ],
+    danger_types: [
+        {
+            name: 'trafic',
+            icon: 'none'
+        },
+        {
+            name: 'temporary',
+            icon: 'none'
+        },
+        {
+            name: 'alert',
+            icon: 'none'
+        }
     ]
 }
