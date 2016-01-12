@@ -1,22 +1,48 @@
 "use strict";
 
 var UserModel   = module.exports,
-    userSchema  = require('../schemas/userSchema');
+    UserSchema  = require('../schemas/userSchema');
 
-UserModel.saveUser = function(username, email, password, callback) {
-    var user = new userSchema({
+UserModel.save = function(username, email, password, callback) {
+    var user = new UserSchema({
         username: username,  
         email: email,
         password: password
     });
 
-    user.save(callback);
+    UserModel.findOneByUsernameOrEmail(username, email, 
+        function(err, result){
+            if (err) {
+                callback(err);
+            }
+            else if (result) {
+                var error = "User " + result.username + " already exists";
+                callback(error);
+            }
+            else {
+                user.save(callback);
+            }
+        }
+    );
 };
 
-UserModel.findUsers = function(callback) {
-    userSchema.find({}, callback);
+UserModel.findAll = function(callback) {
+    UserSchema.find({}, callback);
 };
 
-UserModel.findUserById = function (userId, callback) {
-    userSchema.findById(userId, callback);
+UserModel.findById = function (userId, callback) {
+    UserSchema.findById(userId, callback);
 }
+
+UserModel.findOneByUsernameOrEmail = function(username, email, callback) {
+    UserSchema.findOne( { $or: [ { username: username }, { email: email } ] }, 
+        function(err, result){
+            if (err){
+                callback(err);
+            }
+            else {
+                callback(null, result);
+            }
+        }
+    );
+};

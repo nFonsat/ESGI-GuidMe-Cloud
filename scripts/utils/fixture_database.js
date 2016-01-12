@@ -4,7 +4,7 @@ var clients                 = require('../config/config.js').clients,
     dangerTypes             = require('../config/config.js').danger_types,
     OAuthClientOAuthModel   = require('../schemas/oauthClientSchema'),
     DangerTypeModel         = require('../models/dangerTypeModel'),
-    User                    = require('../schemas/userSchema'),
+    UserModel               = require('../models/userModel'),
     mongoose                = require('mongoose');
 
 exports.loadOAuthClientFixture = function () {
@@ -40,18 +40,14 @@ exports.loadDangerTypeFixture = function () {
 };
 
 exports.loadUserFixture = function() {
-    var testUser = new User({
-        username: 'test',
-        password: 'password',
-        email: 'test@test.com'
-    });
-
-    testUser.save(function (err) {
-        if (err) {
-            console.log(err);
+    UserModel.save('test', 'password', 'test@test.com', 
+        function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log("User " + result.username + " added to database");
+            }
         }
-        else {
-            console.log("User test added to database");
-        }
-    });
+    );
 };

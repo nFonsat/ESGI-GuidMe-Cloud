@@ -13,7 +13,7 @@ UserController.createUser = function(req, res) {
     var password = req.body.password;
 
     if (username && email && password) {
-        UserModel.saveUser(username, email, password, function(err, user) {
+        UserModel.save(username, email, password, function(err, user) {
             if (err){
                 return res.status(500).send(err);
             }
@@ -27,7 +27,7 @@ UserController.createUser = function(req, res) {
 };
 
 UserController.userList = function (req, res, next) {
-    UserModel.findUsers(function(err, users) {
+    UserModel.findAll(function(err, users) {
         if (err){
             return res.status(500).send(err);
         }
@@ -37,7 +37,7 @@ UserController.userList = function (req, res, next) {
 };
 
 UserController.getUser = function (req, res, next) {
-    UserModel.findUserById(req.user.id, function(err, user) {
+    UserModel.findById(req.user.id, function(err, user) {
         if (err) {
             return res.status(500).send(err);
         };
