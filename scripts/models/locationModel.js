@@ -4,55 +4,112 @@ var LocationModel   = module.exports,
     CoordinateModel = require('../models/coordinateModel'),
     LocationSchema  = require('../schemas/locationSchema');
 
-LocationModel.saveWithLatLng = function(name, userId, latitude, longitude, callback) {
-    console.log("Saving location %s with lat : %s and lnt : %s for userID : %s", name, latitude, longitude, userId);
-    CoordinateModel.saveCoordinate(latitude, longitude, function (err, coordinate) {
-        if (err) {
-            console.log("CoordinateModel Error save : %s", err);
-            callback(err);
+function saveLocation(name, userId, latitude, longitude, isfavorite, callback) {
+    LocationModel.findOneByNameAndUserId(name, userId, 
+        function(err, result){
+            if (err) {
+                callback(err);
+            }
+            else if (result) {
+                console.log("Test ", result);
+                var error = "This name " + result.name + " already exists";
+                callback(error);
+            }
+            else {
+                CoordinateModel.saveCoordinate(latitude, longitude, function (err, coordinate) {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        var location = new LocationSchema({
+                            name: name, 
+                            user: userId, 
+                            coordinate: coordinate.id,
+                            isfavorite: isfavorite
+                        });
+
+                        location.save(callback);
+                    }
+                });
+            }
         }
-        else {
-            var location = new LocationSchema({
-                name: name, user: userId, coordinate: coordinate.id
-            });
+    );
+}
 
-            location.save(callback);
+function updateLocation(location, callback) {
+    LocationModel.findOneByNameAndUserId(location.name, location.user, 
+        function(err, result){
+            if (err) {
+                callback(err);
+            }
+            else if (result && result.id != location.id) {
+                var error = "This name " + result.name + " already exists";
+                callback(error);
+            }
+            else {
+                location.save(callback);
+            }
         }
-    })
-};
+    );
+}
 
-LocationModel.getAddressFromCoordinate = function(userId, latitude, longitude, callback) {
+LocationModel.save = function(name, userId, latitude, longitude, callback) {
+    saveLocation(name, userId, latitude, longitude, false, callback);
+}
 
-};
+LocationModel.saveFavorite = function(name, userId, latitude, longitude, callback) {
+    saveLocation(name, userId, latitude, longitude, true, callback);
+}
 
-LocationModel.getAddressByCoordinateId = function(userId, coordinateId, callback) {
+LocationModel.findOneByNameAndUserId = function(name, userId, callback) {
+    LocationSchema.findOne({ name: name, user: userId })
+                  .populate('coordinate')
+                  .exec(callback);
+}
 
-};
-
-LocationModel.getAddressesByUserId = function(userId, callback) {
+LocationModel.findByUserId = function(userId, callback) {
     LocationSchema.find({user:userId})
                   .populate('coordinate')
                   .exec(callback);
 };
 
-LocationModel.getAddressesById = function(addressId, callback) {
+LocationModel.findById = function(addressId, callback) {
     LocationSchema.findById(addressId)
                   .populate('coordinate')
                   .exec(callback);
 };
 
-LocationModel.updateAddress = function(addressId, newName, callback) {
+LocationModel.update = function(addressId, userId, newName, callback) {
+    LocationSchema.findById(addressId, function (err, location) {
+        if (err){
+            callback(err);
+        }
+        else if ( !location ){
+            var error = "Data not found";
+            callback(error);
+        }
+        else if (location.user == userId) {
+            location.name = newName;
+            updateLocation(location, callback);
+        } else {
+            callback("User not owner");
+        }
+    });
+};
+
+LocationModel.delete = function(addressId, callback) {
+    LocationSchema.findByIdAndRemove(addressId, callback);
+};
+
+LocationModel.play = function(addressId, callback) {
     LocationSchema.findById(addressId, function (err, location) {
         if (err){
             callback(err);
         }
         else {
-            location.name = newName;
+            location.lastUsed = new Date();
+            location.navigateTo++;
             location.save(callback);
         }
     });
-};
-
-LocationModel.deleteAddress = function(addressId, callback) {
-    LocationSchema.findByIdAndRemove(addressId, callback);
 };
