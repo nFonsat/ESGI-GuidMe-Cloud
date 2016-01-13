@@ -20,6 +20,9 @@ mongoose.connect(config.database.uri, function (err, res) {
     }
 
     console.log("Connection to database : %s", config.database.uri);
+    fixture.loadOAuthClientFixture();
+    fixture.loadDangerTypeFixture();
+    fixture.loadUserFixture();
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
