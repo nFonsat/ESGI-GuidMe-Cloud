@@ -22,6 +22,9 @@ module.exports = function (app) {
     app.get(apiLocation + '/:locationId', app.oauth.authorise(), LocationController.getLocation);
     app.put(apiLocation + '/:locationId', app.oauth.authorise(), LocationController.updateLocation);
     app.delete(apiLocation + '/:locationId', app.oauth.authorise(), LocationController.deleteLocation);
+    app.post(apiLocation + '/play/:locationId', app.oauth.authorise(), LocationController.playLocation);
+    app.post(apiLocation + '/favorite/:locationId', app.oauth.authorise(), LocationController.postFavorite);
+    app.delete(apiLocation + '/favorite/:locationId', app.oauth.authorise(), LocationController.deleteFavorite);
 
     var apiDanger = apiBaseUrl + '/danger';
     app.get(apiDanger + '/all', DangerController.getDangers);

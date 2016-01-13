@@ -18,6 +18,18 @@ var LocationSchema = new Schema({
         type : ObjectId, 
         ref : 'Coordinate',
         require: true
+    },
+    isfavorite: {
+        type : Boolean,
+        default: false
+    },
+    navigateTo: {
+        type : Number,
+        default: 0
+    },
+    lastUsed: {
+        type : Date,
+        default: null
     }
 });
 

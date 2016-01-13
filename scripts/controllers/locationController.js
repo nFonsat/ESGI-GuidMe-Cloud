@@ -3,37 +3,52 @@
 var LocationController  = module.exports,
     LocationModel       = require('../models/locationModel');
 
+function displayLocation(res, err, location) {
+    if (err) {
+        return res.status(500).send({error: err});
+    }
+    else if (!location) {
+        return res.status(500).send({error: "Location not found"});
+    }
+    else {
+        res.json(location);
+    }
+}
+
+function displayLocations(res, err, locations) {
+    if (err) {
+        return res.status(500).send({error: "Bad mongoose query"});
+    }
+    else {
+        res.json(locations);
+    }
+}
+
 LocationController.postLocation = function (req, res, next) {
-    console.log(req.body);
     if (!req.body ||!req.body.name ||!req.body.latitude ||!req.body.longitude ){
         res.status(500).json({ error: 'Check body parameter' });
     }
     else {
-        var name        = req.body.name;
-        var latitude    = req.body.latitude;
-        var longitude   = req.body.longitude;
-        console.log(req);
+        var name        = req.body.name,
+            latitude    = req.body.latitude,
+            longitude   = req.body.longitude,
+            userId      = req.user.id,
+            isfavorite  = req.body.isfavorite || false;
 
-        LocationModel.saveWithLatLng(name, req.user.id, latitude, longitude, 
+        LocationModel.save(name, userId, latitude, longitude, isfavorite,
             function(err, dataSaving) {
                 if (err) {
-                    console.log("postLocation Error : %s", err)
-                    return res.status(500).send({error: "Bad mongoose query"});
+                    return res.status(500).send({error: err});
                 }
                 else {
-                    LocationModel.getAddressesById(dataSaving.id, function(err, location) {
-                        if (err) {
-                            return res.status(500).send(err);
-                        }
-                        else {
-                            res.json(location);
-                        }
+                    LocationModel.findById(dataSaving.id, function(err, location) {
+                        displayLocation(res, err, location);
                     });
                 }
             }
         );
     }
-};
+}
 
 LocationController.getLocation = function (req, res, next) {
     if (!req.params ||!req.params.locationId){
@@ -42,17 +57,11 @@ LocationController.getLocation = function (req, res, next) {
     else {
         var locationId = req.params.locationId;
 
-        LocationModel.getAddressesById(locationId, function(err, location) {
-            if (err) {
-                console.log("getLocation Error : %s", err)
-                return res.status(500).send({error: "Bad mongoose query"});
-            }
-            else {
-                res.json(location);
-            }
+        LocationModel.findById(locationId, function(err, location) {
+            displayLocation(res, err, location);
         });
     }
-};
+}
 
 LocationController.updateLocation = function (req, res, next) {
     if ((!req.params ||!req.params.locationId) || (!req.body ||!req.body.name)){
@@ -60,26 +69,21 @@ LocationController.updateLocation = function (req, res, next) {
     }
     else {
         var newName     = req.body.name,
-            locationId   = req.params.locationId;
+            locationId  = req.params.locationId,
+            userId      = req.user.id;
 
-        LocationModel.updateAddress(locationId, newName, function(err, dataUpdated) {
+        LocationModel.update(locationId, userId, newName,function(err, dataUpdated) {
             if (err) {
-                console.log("updateLocation Error : %s", err)
-                return res.status(500).send({error: "Bad mongoose query"});
+                return res.status(500).send({error: err});
             }
             else {
-                LocationModel.getAddressesById(dataUpdated.id, function(err, location) {
-                    if (err) {
-                        return res.status(500).send(err);
-                    }
-                    else {
-                        res.json(location);
-                    }
+                LocationModel.findById(dataUpdated.id, function(err, location) {
+                    displayLocation(res, err, location);
                 });
             }
         });
     }
-};
+}
 
 LocationController.deleteLocation = function (req, res, next) {
     if (!req.params ||!req.params.locationId){
@@ -88,27 +92,72 @@ LocationController.deleteLocation = function (req, res, next) {
     else {
         var locationId = req.params.locationId;
 
-        LocationModel.deleteAddress(locationId, function(err, location) {
-            if (err) {
-                console.log("deleteLocation Error : %s", err)
-                return res.status(500).send({error: "Bad mongoose query"});
-            }
-            else {
-                res.json({success: location.id + ' is deleted'});
-            }
+        LocationModel.delete(locationId, function(err, location) {
+            displayLocation(res, err, location);
         });
     }
-};
+}
 
 LocationController.getLocations = function (req, res, next) {
-    console.log(req);
-    LocationModel.getAddressesByUserId(req.user.id, function(err, locations) {
-        if (err) {
-            console.log("getLocations Error : %s", err)
-            return res.status(500).send({error: "Bad mongoose query"});
-        }
-        else {
-            res.json(locations);
-        }
-    });
-};
+    if (req.query.favorite || req.query.favorite == '') {
+        LocationModel.findByUserIdAndFavorite(req.user.id, 
+            function(err, locations) {
+                displayLocations(res, err, locations);
+            }
+        );
+    }
+    else {
+        LocationModel.findByUserId(req.user.id, 
+            function(err, locations) {
+                displayLocations(res, err, locations);
+            }
+        );
+    }
+}
+
+LocationController.playLocation = function(req, res, next) {
+    var locationId  = req.params.locationId;
+
+    if ( !locationId ){
+        res.status(500).json({ error: 'assign location id in url' });
+    }
+    else {
+        LocationModel.play(locationId,
+            function(err, location) {
+                displayLocation(res, err, location);
+            }
+        );
+    }
+}
+
+LocationController.postFavorite = function (req, res, next) {
+    var userId      = req.user.id,
+        locationId  = req.params.locationId;
+
+    if ( !locationId ){
+        res.status(500).json({ error: 'assign location id in url' });
+    }
+    else {
+        LocationModel.addFavorite(locationId, userId, 
+            function(err, location) {
+                displayLocation(res, err, location);
+            }
+        );
+    }
+}
+
+LocationController.deleteFavorite = function (req, res, next) {
+    var userId      = req.user.id,
+        locationId  = req.params.locationId;
+
+    if ( !locationId ){
+        res.status(500).json({ error: 'assign location id in url' });
+    }
+    else {
+        LocationModel.deleteFavorite(locationId, userId, 
+            function(err, location) {
+                displayLocation(res, err, location);
+            }
+        );
+    }
+}

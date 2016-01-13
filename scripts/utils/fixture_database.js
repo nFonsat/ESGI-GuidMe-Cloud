@@ -39,7 +39,11 @@ exports.loadDangerTypeFixture = function () {
 };
 
 exports.loadUserFixture = function() {
-    UserModel.save('test', 'password', 'test@test.com', 
+    var username    = 'test',
+        email       = 'test@test.com',
+        password    = 'password';
+
+    UserModel.save(username, email, password,
         function (err, result) {
             if (err) {
                 console.log(err);
