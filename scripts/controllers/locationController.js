@@ -106,6 +106,13 @@ LocationController.getLocations = function (req, res, next) {
             }
         );
     }
+    else if (req.query.history || req.query.history == '') {
+        LocationModel.findByUserIdAndHistory(req.user.id, 
+            function(err, locations) {
+                displayLocations(res, err, locations);
+            }
+        );
+    }
     else {
         LocationModel.findByUserId(req.user.id, 
             function(err, locations) {
