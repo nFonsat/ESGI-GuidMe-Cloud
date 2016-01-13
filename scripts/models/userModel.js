@@ -20,7 +20,14 @@ UserModel.save = function(username, email, password, callback) {
                 callback(error);
             }
             else {
-                user.save(callback);
+                user.save(function(err, result) {
+                    if (err){
+                        callback(err);
+                    }
+                    else {
+                        UserModel.findById(result.id, callback);
+                    }
+                });
             }
         }
     );
