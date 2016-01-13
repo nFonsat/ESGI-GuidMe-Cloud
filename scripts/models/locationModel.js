@@ -106,6 +106,12 @@ LocationModel.findByUserIdAndFavorite = function(userId, callback) {
                   .exec(callback);
 };
 
+LocationModel.findByUserIdAndHistory = function(userId, callback) {
+    LocationSchema.find({ user:userId, lastUsed: { $ne: null }})
+                  .populate('coordinate')
+                  .exec(callback);
+};
+
 LocationModel.findById = function(addressId, callback) {
     LocationSchema.findById(addressId)
                   .populate('coordinate')
