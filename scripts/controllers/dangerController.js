@@ -1,7 +1,8 @@
 "use strict";
 
-var DangerController  = module.exports,
-    DangerModel       = require('../models/dangerModel');
+var DangerController    = module.exports,
+    DangerModel         = require('../models/dangerModel'),
+    DangerTypeModel     = require('../models/dangerTypeModel');
 
 DangerController.postDanger = function (req, res, next) {
     console.log("--DangerController postDanger");
@@ -145,4 +146,19 @@ DangerController.getDangers = function (req, res, next) {
             }
         );
     }
+};
+
+DangerController.getTypes = function (req, res, next) {
+    console.log("--DangerController getTypes");
+
+    DangerTypeModel.findAll(
+        function(err, results){
+            if (err) {
+                res.status(500).send(err);
+            }
+            else {
+                res.json(results);
+            }
+        }
+    );
 };
