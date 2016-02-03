@@ -28,6 +28,7 @@ module.exports = function (app) {
 
     var apiDanger = apiBaseUrl + '/danger';
     app.get(apiDanger + '/all', DangerController.getDangers);
+    app.get(apiDanger + '/types', DangerController.getTypes);
     app.post(apiDanger, app.oauth.authorise(), DangerController.postDanger);
     app.get(apiDanger + '/:dangerId', DangerController.getDanger);
     app.put(apiDanger + '/:dangerId', app.oauth.authorise(), DangerController.updateDanger);
