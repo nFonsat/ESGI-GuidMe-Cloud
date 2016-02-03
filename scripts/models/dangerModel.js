@@ -29,6 +29,9 @@ DangerModel.findByDistanceToPoint = function(latitude, longitude, distance, limi
             if (err) {
                 callback(err);
             }
+            else if (data.length == 0) {
+                callback(null, data);
+            }
             else {
                 var dataTofind = [];
                 data.forEach(function (coordinate) {
